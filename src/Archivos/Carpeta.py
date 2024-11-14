@@ -1,7 +1,8 @@
 class Carpeta:
-    def __init__(self,nombre,padre):
+    def __init__(self,nombre,padre,protegida):
         self.name = nombre
         self.padre = padre
+        self.protegida = protegida
         self.contenidos = []
 
     def buscar_elemento(self, nombre):
@@ -13,7 +14,7 @@ class Carpeta:
     def verif_elemento_existe(self,nombre):
         for elemento in self.contenidos:
             if elemento.name == nombre:
-                return True
+                return True 
         return False
 
     def get_nombre(self):

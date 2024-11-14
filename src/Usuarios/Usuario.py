@@ -1,5 +1,8 @@
 class Usuario:
-    def __init__(self,nombre,permisos,correo):
+    def __init__(self,nombre,correo,clearance_lvl,pwd):
         self.nombre = nombre
-        self.permisos = permisos
+        self.clearance_lvl = clearance_lvl
         self.correo = correo
+        self.pwd = pwd
+
+
