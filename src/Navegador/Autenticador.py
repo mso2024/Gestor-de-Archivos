@@ -7,5 +7,5 @@ class Autenticador:
     def autenticar_cem_usuario(self,clearance_lvl):
         if clearance_lvl is 3:
             return True
-        return False
+        return False    
 
