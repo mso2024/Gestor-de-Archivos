@@ -12,7 +12,7 @@ autenticador = Autenticador()
 while True:
     print("Por Favor introduzca su correo y contraseña (en ese orden): ")
     correo = str(input())
-    pwd = str(input())
+    pwd = int(input())
     global_user = None
     if bd.verif_user_exists(correo):
         global_user = bd.log_in(correo,pwd)
@@ -21,13 +21,13 @@ while True:
         print("El usuario no existe, por favor intentelo de nuevo")
 
 while True:
-    if global_user.clearance_lvl is 3:
-        print("Opciones:\n 1 - Navegar\n 2 - Volver a Home (root)\n 3 - Volver a directorio previo\n 4 - Eliminar elemento\n 5 - Agregar elemento\n 6 - Modificar Usuario\n 7 - Eliminar Usuario\n 8 - Modificar Usuario\n")
-    elif global_user.clearance_lvl is 2:
-        print("Opciones:\n 1 - Navegar\n 2 - Volver a Home (root)\n 3 - Volver a directorio previo\n 4 - Eliminar elemento\n 5 - Agregar elemento\n")
-    elif global_user.clearance_lvl is 1:
+    if global_user.clearance_lvl == 3:
+        print("Opciones:\n 1 - Navegar\n 2 - Volver a Home (root)\n 3 - Volver a directorio previo\n 4 - Eliminar elemento\n 5 - Agregar elemento\n 6 - Mover Elemento\n 8 - Eliminar Usuario\n 9 - Modificar Usuario\n 10 - Crear Usuario")
+    elif global_user.clearance_lvl == 2:
+        print("Opciones:\n 1 - Navegar\n 2 - Volver a Home (root)\n 3 - Volver a directorio previo\n 4 - Eliminar elemento\n 5 - Agregar elemento\n 6 - Mover Elemento\n")
+    elif global_user.clearance_lvl == 1:
         print( "Opciones:\n 1 - Navegar\n 2 - Volver a Home (root)\n 3 - Volver a directorio previo\n")
-
+    nav.ver_directorio()
     opt = int(input())
     if opt == 1:
         nav.ver_directorio()
@@ -61,32 +61,43 @@ while True:
                 nav.ver_directorio()
 
             elif opt2 == 2:
-                print("Introduzca el nombre de la carpeta: ")
+                print("Introduzca el nombre de la carpeta y si quiere que sea protegida (1-Si,2-No): ")
                 nombre = str(input())
+                protected = int(input())
                 new_folder = Carpeta(nombre,nav.current_element)
                 nav.current_element.agregar_elemento(new_folder)
                 nav.ver_directorio()
         else:
             print("No tiene permiso para hacer esto.")
     elif opt == 6:
+        if autenticador.autenticar_cv_elemento(global_user.clearance_lvl):
+            nav.ver_directorio()
+            print("Introduzca el nombre del elemento a mover: ")
+            nombre_elemento = str(input())
+            print("Introduzca el nombre de la carpeta destino: ")
+            nombre_destino = str(input())
+            nav.mover_elemento(nombre_elemento, nombre_destino, global_user.clearance_lvl)
+        else:
+            print("No tiene permiso para hacer esto.")
+    elif opt == 9:
         if autenticador.autenticar_cem_usuario(global_user.clearance_lvl):
             print("Introduzca el correo del usuario : ")
             correo = str(input())
             if bd.verif_user_exists(correo):
                 opt3 = int(input("1 - Modificar correo\n2 - Modificar Nombre\n3 - Modificar Permisos\n"))
-                if opt3 is 1:
+                if opt3 == 1:
                     new_mail = str(input("Introduzca el nuevo correo: "))
                     if bd.modify_user_mail(correo,new_mail):
                         print("Nombre modificado exitosamente.")
                     else:
                         print("Error modificando el correo.")
-                elif opt3 is 2:
+                elif opt3 == 2:
                     new_name = str(input("Introduzca el nuevo nombre: "))
                     if bd.modify_user_name(correo, new_name):
                         print("Nombre modificado exitosamente.")
                     else:
                         print("Error modificando el nombre.")
-                elif opt3 is 3:
+                elif opt3 == 3:
                     new_clearance_lvl = str(input("Nuevo nivel de nivel de autorización (1=Consultor,2=Director de proyecto,3=Administrador): "))
                     if bd.modify_user_clearance(correo,new_clearance_lvl):
                         print("Autorización cambiada exitosamente.")
@@ -98,12 +109,12 @@ while True:
                 print("El usuario no existe, por favor intentelo de nuevo.")
         else:
             print("No tiene permiso para hacer esto.")
-    elif opt == 7:
+    elif opt == 8:
         if autenticador.autenticar_cem_usuario(global_user.clearance_lvl):
             print("Introduzca el correo del usuario que desea eliminar: ")
             correo = str(input())
             if bd.verif_user_exists(correo):
-                if bd.delete_user(correo) is 1:
+                if bd.delete_user(correo) == 1:
                     print("Usuario eliminado exitosamente.")
                 else:
                     print("Error eliminando el usuario.")
@@ -112,7 +123,7 @@ while True:
 
         else:
             print("No tiene permiso para hacer esto.")
-    elif opt == 8:
+    elif opt == 10:
         if autenticador.autenticar_cem_usuario(global_user.clearance_lvl):
             nombre = str(input("Introduzca el nombre del nuevo usuario: "))
             correo = str(input("Introduzca el correo del nuevo usuario: "))
